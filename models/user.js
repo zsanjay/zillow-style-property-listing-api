@@ -15,14 +15,23 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    status: {
-        type: String,
-        default: 'INACTIVE'
+    role: { 
+        type: String, 
+        enum: ['user', 'admin'],
+        default: 'user'
     },
-    properties : [{
-        type : Schema.Types.ObjectId,
-        ref : 'Property'
+    properties: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Property'
     }]
 }, { timestamps: true });
+
+userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+    }
+});
 
 module.exports = mongoose.model('User', userSchema);
